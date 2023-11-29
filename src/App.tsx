@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AppRouter } from "./routes";
+import { AppGeolocation } from "./components";
 import ApplicationConfigProvider from "./ApplicationConfigProvider";
 
 import "./App.css";
@@ -14,6 +15,7 @@ function App() {
         toastOptions={{ defaultOptions: { position: "top-right" } }}
       >
         <QueryClientProvider client={queryClient}>
+          <AppGeolocation />
           <AppRouter />
         </QueryClientProvider>
       </ChakraProvider>

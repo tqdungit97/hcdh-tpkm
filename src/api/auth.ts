@@ -6,13 +6,11 @@ export type PostLoginPayload = {
 };
 
 export type PostLoginResponse = {
-  data: {
-    userId: number;
-    accessToken: string;
-    accessTokenExpiryIn: number;
-    refreshToken: string;
-    refreshTokenExpiryIn: number;
-  };
+  userId: number;
+  accessToken: string;
+  accessTokenExpiryIn: number;
+  refreshToken: string;
+  refreshTokenExpiryIn: number;
 };
 export const postLogin = (payload: PostLoginPayload) => {
   return AxiosInstance.post<PostLoginResponse>("/api/auth/v1/login", payload);
@@ -29,5 +27,8 @@ export type PostRegisterPayload = {
   dob?: string;
 };
 export const postRegister = (payload: PostRegisterPayload) => {
-  return AxiosInstance.post("/api/user/v1/register", payload);
+  return AxiosInstance.post<PostRegisterPayload>(
+    "/api/user/v1/register",
+    payload
+  );
 };

@@ -9,8 +9,8 @@ export function useAuthentication() {
 
   const {
     mutate: login,
-    isLoading: loginLoading,
     isError: loginError,
+    isLoading: loginLoading,
   } = useMutation(postLogin, {
     onError: () => {
       toast({
@@ -19,15 +19,15 @@ export function useAuthentication() {
         status: "error",
       });
     },
-    onSuccess: (data) => {
-      setAccessToken(data.data.data.accessToken);
-      setRefreshToken(data.data.data.refreshToken);
+    onSuccess: ({ data }) => {
+      setAccessToken(data.accessToken);
+      setRefreshToken(data.refreshToken);
     }
   });
   const {
     mutate: register,
-    isLoading: registerLoading,
     isError: registerError,
+    isLoading: registerLoading,
   } = useMutation(postRegister, {
     onError: () => {
       toast({

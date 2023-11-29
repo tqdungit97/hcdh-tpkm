@@ -1,0 +1,5 @@
+.autoCompletePlacesContainer {
+    > div {
+        background-color: transparent !important;
+    }
+}
