@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { Box, Button, VStack } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import { Box, VStack } from "@chakra-ui/react";
 import { useLoadScript } from "@react-google-maps/api";
-import { AutoCompleteAddress, GoogleMap, Directions } from "../../components";
+import { useGeolocation } from "../../hooks";
+import { AutoCompleteAddress, GoogleMap, Directions, BookingButton } from "../../components";
+import { getPlaceFromCoordinates } from "../../api/googleMap";
 import { environment } from "../../environment";
 
 export function Home() {
@@ -9,10 +11,32 @@ export function Home() {
     from: undefined,
     to: undefined,
   });
+  const [directionResult, setDirectionResult] = useState<google.maps.DirectionsResult>();
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: environment.googleMapApiKey,
     libraries: ["places"],
   });
+  const geoLocation = useGeolocation();
+
+  const onInitialPlace = useCallback(
+    async (geoLocation: GeolocationPosition) => {
+      try {
+        const place = await getPlaceFromCoordinates(geoLocation).then(
+          (resp) => resp.results[0]
+        );
+        setPlaces({ from: place });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (isLoaded && geoLocation?.coords) {
+      onInitialPlace(geoLocation);
+    }
+  }, [isLoaded, geoLocation, onInitialPlace]);
 
   if (!isLoaded) {
     return "Loading Google Map";
@@ -20,12 +44,12 @@ export function Home() {
 
   return (
     <VStack spacing="0">
-      <Box w="100%" h="60vh">
-        <GoogleMap directions={directions} />
+      <Box w="full" h="60vh">
+        <GoogleMap directions={directions} onDirectionResultChanged={setDirectionResult}/>
       </Box>
-      <Box w="100%" h="40%" p="16px">
+      <Box w="full" h="40%" p="16px">
         <AutoCompleteAddress
-          useCurrentPosition
+          defaultPlace={directions.from}
           mb="8px"
           onChange={(from) => setPlaces((prev) => ({ ...prev, from }))}
         />
@@ -33,13 +57,7 @@ export function Home() {
           mb="8px"
           onChange={(to) => setPlaces((prev) => ({ ...prev, to }))}
         />
-        <Button
-          w="100%"
-          isDisabled={!directions.from || !directions.to}
-          colorScheme="whatsapp"
-        >
-          Đặt xe
-        </Button>
+        <BookingButton directionResult={directionResult} />
       </Box>
     </VStack>
   );

@@ -50,7 +50,7 @@ export function Login() {
         />
         <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" w="100%" isDisabled={!isValid || isLoading} colorScheme="whatsapp">
+      <Button type="submit" w="full" isDisabled={!isValid || isLoading} colorScheme="whatsapp">
         Đăng nhập
       </Button>
     </form>

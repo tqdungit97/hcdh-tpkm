@@ -83,7 +83,7 @@ export function Register() {
 
       <Button
         type="submit"
-        w="100%"
+        w="full"
         isDisabled={!isValid || isLoading}
         colorScheme="whatsapp"
       >

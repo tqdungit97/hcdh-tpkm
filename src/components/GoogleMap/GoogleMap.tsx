@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Skeleton } from "@chakra-ui/react";
 import {
   DirectionsRenderer,
@@ -6,7 +7,7 @@ import {
   MarkerF,
 } from "@react-google-maps/api";
 import { useGeolocation } from "../../hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { environment } from "../../environment";
 
 export type Directions = {
   from?: google.maps.places.PlaceResult;
@@ -15,9 +16,10 @@ export type Directions = {
 
 type GoogleMapProps = {
   directions: Directions;
+  onDirectionResultChanged: (result?: google.maps.DirectionsResult) => void;
 };
 
-export function GoogleMap({ directions }: GoogleMapProps) {
+export function GoogleMap({ directions, onDirectionResultChanged }: GoogleMapProps) {
   const geoLocation = useGeolocation();
   const [directionResult, setDirectionResult] =
     useState<google.maps.DirectionsResult>();
@@ -30,6 +32,7 @@ export function GoogleMap({ directions }: GoogleMapProps) {
       if (result !== null) {
         if (status === "OK") {
           setDirectionResult(result);
+          onDirectionResultChanged(result);
         } else {
           console.log("response: ", result);
         }
@@ -52,13 +55,17 @@ export function GoogleMap({ directions }: GoogleMapProps) {
   useEffect(() => {
     if (!directionRequest) {
       setDirectionResult(undefined);
+      onDirectionResultChanged(undefined);
     }
-  }, [directionRequest]);
+  }, [directionRequest, onDirectionResultChanged]);
 
   return (
-    <Box w="100%" height="100%">
+    <Box w="full" height="full">
       {geoLocation?.coords ? (
         <Map
+          options={{
+            mapId: environment.googleMapApiMapId,
+          }}
           zoom={15}
           center={{
             lat: geoLocation?.coords.latitude,
@@ -72,8 +79,8 @@ export function GoogleMap({ directions }: GoogleMapProps) {
           {!directionResult && directions.from && (
             <MarkerF
               position={{
-                lat: directions.from.geometry?.location?.lat() ?? 0,
-                lng: directions.from.geometry?.location?.lng() ?? 0,
+                lat: directions.from.geometry?.location?.lat() ?? NaN,
+                lng: directions.from.geometry?.location?.lng() ?? NaN,
               }}
             />
           )}
@@ -88,7 +95,7 @@ export function GoogleMap({ directions }: GoogleMapProps) {
           )}
         </Map>
       ) : (
-        <Skeleton w="100%" h="100%" />
+        <Skeleton w="full" h="full" />
       )}
     </Box>
   );

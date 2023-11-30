@@ -32,10 +32,10 @@ export function AuthLayout() {
   const tabIndex = location.pathname === "/auth/register" ? 1 : 0;
   return (
     <VStack spacing={0}>
-      <Center h="30vh" w="100%" bg="green.300">
+      <Center h="30vh" w="full" bg="green.300">
         <Image src={AppIcon} maxWidth="120px" />
       </Center>
-      <Box h="70vh" w="100%">
+      <Box h="70vh" w="full">
         <Tabs
           marginTop="-24px"
           marginX="16px"

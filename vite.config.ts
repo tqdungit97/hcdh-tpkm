@@ -6,6 +6,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
+    host: true,
     proxy: {
       '/api': {
         target: 'http://192.168.1.13:8081/api',

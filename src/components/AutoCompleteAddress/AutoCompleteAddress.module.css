@@ -1,5 +1,9 @@
 .autoCompletePlacesContainer {
     > div {
         background-color: transparent !important;
+        &:not(.inputContainer) {
+            opacity: 0;
+            pointer-events: none;
+        }
     }
 }

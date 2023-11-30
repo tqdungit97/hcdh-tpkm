@@ -1,5 +1,6 @@
 export const environment = {
   production: import.meta.env.NODE_ENV === 'production',
   apiUrl: import.meta.env.VITE_APP_API_URL || "",
-  googleMapApiKey: import.meta.env.VITE_APP_GOOGLE_MAP_API_KEY || ""
+  googleMapApiKey: import.meta.env.VITE_APP_GOOGLE_MAP_API_KEY || "",
+  googleMapApiMapId: import.meta.env.VITE_APP_GOOGLE_MAP_API_MAP_ID || ''
 };
