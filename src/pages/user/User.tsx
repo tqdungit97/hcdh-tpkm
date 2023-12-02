@@ -1,71 +1,137 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, VStack } from "@chakra-ui/react";
-import { useLoadScript } from "@react-google-maps/api";
-import { useGeolocation } from "../../hooks";
+import { AppHeader } from "../../components";
 import {
+  BingMap,
   AutoCompleteAddress,
-  GoogleMap,
-  Places,
-  AppHeader,
-} from "../../components";
+  BingMapProvider,
+  Directions,
+  BingMapDirections,
+} from "../../components/BingMap";
 import { BookingButton } from "./BookingButton";
-import { getPlaceFromCoordinates } from "../../api/googleMap";
-import { environment } from "../../environment";
+import { useBooking } from "../../hooks";
+
 
 export function User() {
-  const [places, setPlaces] = useState<Places>({
-    from: undefined,
-    to: undefined,
-  });
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: environment.googleMapApiKey,
-    libraries: ["places"],
-  });
-  const geoLocation = useGeolocation();
-
-  const onInitialPlace = useCallback(
-    async (geoLocation: GeolocationPosition) => {
-      try {
-        const place = await getPlaceFromCoordinates(geoLocation).then(
-          (resp) => resp.results[0]
-        );
-        setPlaces({ from: place });
-      } catch (error) {
-        console.log(error);
-      }
+  const { bookingData } = useBooking();
+  const [directions, setDirections] = useState<Directions>({
+    from: {
+      subtitle: "Phường Tân Thuận Tây, Ho Chi Minh City 72910, Vietnam",
+      location: {
+        latitude: 10.75474,
+        longitude: 106.726303,
+        altitude: 0,
+        altitudeReference: -1,
+      },
+      entityType: "PostalAddress",
+      entitySubType: "Address",
+      title: "164 Huỳnh Tấn Phát",
+      entityId:
+        'local_geoid:"QWRkcmVzcy84NDM4MjM2NDY5MTc2MzAzNjQ0JTdjMTY0P2FsdFF1ZXJ5PWFsJTVlMTY0K0h1JWUxJWJiJWIzbmgrVCVlMSViYSVhNW4rUGglYzMlYTF0JTdjbGMlNWVQaCVjNiViMCVlMSViYiU5ZG5nK1QlYzMlYTJuK1RodSVlMSViYSVhZG4rVCVjMyVhMnklN2NhMiU1ZURpc3RyaWN0KzclN2NhMSU1ZUhvK0NoaStNaW5oK0NpdHklN2NjciU1ZVZpZXRuYW0lN2Npc28lNWVWTg=="',
+      address: {
+        countryRegionISO2: "VN",
+        adminDistrict: "Ho Chi Minh City",
+        district: "District 7",
+        addressLine: "164 Huỳnh Tấn Phát",
+        countryRegion: "Vietnam",
+        locality: "Phường Tân Thuận Tây",
+        postalCode: "72910",
+        formattedAddress:
+          "164 Huỳnh Tấn Phát, Phường Tân Thuận Tây, Ho Chi Minh City 72910, Vietnam",
+      },
+      formattedSuggestion:
+        "164 Huỳnh Tấn Phát, Phường Tân Thuận Tây, Ho Chi Minh City 72910, Vietnam",
+      bestView: {
+        center: {
+          latitude: 10.75474,
+          longitude: 106.726303,
+          altitude: 0,
+          altitudeReference: -1,
+        },
+        width: 0.010484610890983959,
+        height: 0.007725435141352932,
+        crs: {
+          id: "LatLon",
+          bounds: [90, 180, -90, -180],
+        },
+        bounds: [
+          10.758602717570676, 106.7315453054455, 10.750877282429324,
+          106.72106069455451,
+        ],
+      },
     },
-    []
-  );
-
-  useEffect(() => {
-    if (isLoaded && geoLocation?.coords) {
-      onInitialPlace(geoLocation);
-    }
-  }, [isLoaded, geoLocation, onInitialPlace]);
-
-  if (!isLoaded) {
-    return "Loading Google Map";
-  }
+    to: {
+      subtitle: "Ward 4, Ho Chi Minh City 72711, Vietnam",
+      location: {
+        latitude: 10.762679,
+        longitude: 106.682586,
+        altitude: 0,
+        altitudeReference: -1,
+      },
+      entityType: "PostalAddress",
+      entitySubType: "Address",
+      title: "227 Nguyễn Văn Cừ",
+      entityId:
+        'local_geoid:"QWRkcmVzcy84NDM4MjM5NDk5NDA5OTQ4ODAyJTdjMjI3P2FsdFF1ZXJ5PWFsJTVlMjI3K05ndXklZTElYmIlODVuK1YlYzQlODNuK0MlZTElYmIlYWIlN2NsYyU1ZVdhcmQrNCU3Y2EyJTVlRGlzdHJpY3QrNSU3Y2ExJTVlSG8rQ2hpK01pbmgrQ2l0eSU3Y2NyJTVlVmlldG5hbSU3Y2lzbyU1ZVZO"',
+      address: {
+        countryRegionISO2: "VN",
+        adminDistrict: "Ho Chi Minh City",
+        district: "District 5",
+        addressLine: "227 Nguyễn Văn Cừ",
+        countryRegion: "Vietnam",
+        locality: "Ward 4",
+        postalCode: "72711",
+        formattedAddress:
+          "227 Nguyễn Văn Cừ, Ward 4, Ho Chi Minh City 72711, Vietnam",
+      },
+      formattedSuggestion:
+        "227 Nguyễn Văn Cừ, Ward 4, Ho Chi Minh City 72711, Vietnam",
+      bestView: {
+        center: {
+          latitude: 10.762679,
+          longitude: 106.682586,
+          altitude: 0,
+          altitudeReference: -1,
+        },
+        width: 0.010484886838071361,
+        height: 0.007725435141352932,
+        crs: {
+          id: "LatLon",
+          bounds: [90, 180, -90, -180],
+        },
+        bounds: [
+          10.766541717570677, 106.68782844341904, 10.758816282429324,
+          106.67734355658096,
+        ],
+      },
+    },
+  } as unknown as Directions);
 
   return (
-    <VStack spacing="0">
-      <AppHeader />
-      <Box w="full" h="calc(60vh - 40px)">
-        <GoogleMap places={places} onDirectionResultChanged={console.log} />
-      </Box>
-      <Box w="full" h="40%" p="16px">
-        <AutoCompleteAddress
-          defaultPlace={places.from}
-          mb="8px"
-          onChange={(from) => setPlaces((prev) => ({ ...prev, from }))}
-        />
-        <AutoCompleteAddress
-          mb="8px"
-          onChange={(to) => setPlaces((prev) => ({ ...prev, to }))}
-        />
-        <BookingButton places={places} />
-      </Box>
-    </VStack>
+    <BingMapProvider>
+      <VStack spacing="0">
+        <AppHeader />
+        <Box w="full" h="calc(60vh - 40px)">
+          <BingMap />
+          <BingMapDirections directions={directions} />
+        </Box>
+        <Box w="full" h="40%" p="16px">
+          <AutoCompleteAddress
+            disabled={!!bookingData}
+            id="autoSuggestFrom"
+            mb="8px"
+            onChange={(from) => setDirections((prev) => ({ ...prev, from }))}
+          />
+          <AutoCompleteAddress
+            disabled={!!bookingData}
+            id="autoSuggestTo"
+            mb="8px"
+            onChange={(to) => setDirections((prev) => ({ ...prev, to }))}
+          />
+          <BookingButton directions={directions} />
+        </Box>
+      </VStack>
+    </BingMapProvider>
   );
 }
 

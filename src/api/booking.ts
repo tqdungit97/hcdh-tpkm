@@ -16,6 +16,7 @@ export type PostBookingResponse = {
   booking: {
     bookingDetail: BookingDetail;
     code: string;
+    customerId: number;
     id: number;
     startTime: Date;
     status: BookingStatus;
