@@ -10,17 +10,17 @@ import {
 import { useGeolocation } from "../../hooks";
 import { environment } from "../../environment";
 
-export type Directions = {
+export type Places = {
   from?: google.maps.places.PlaceResult;
   to?: google.maps.places.PlaceResult;
 };
 
 type GoogleMapProps = {
-  directions?: Directions;
+  places?: Places;
   onDirectionResultChanged?: (result?: google.maps.DirectionsResult) => void;
 } & Partial<BaseGoogleMapProps>;
 
-export function GoogleMap({ directions, onDirectionResultChanged, ...rest }: GoogleMapProps) {
+export function GoogleMap({ places, onDirectionResultChanged, ...rest }: GoogleMapProps) {
   const geoLocation = useGeolocation();
   const [directionResult, setDirectionResult] =
     useState<google.maps.DirectionsResult>();
@@ -43,15 +43,15 @@ export function GoogleMap({ directions, onDirectionResultChanged, ...rest }: Goo
   );
 
   const directionRequest = useMemo((): google.maps.DirectionsRequest | null => {
-    if (!directions?.from || !directions?.to) {
+    if (!places?.from || !places?.to) {
       return null;
     }
     return {
-      origin: { placeId: directions.to?.place_id },
-      destination: { placeId: directions.from?.place_id },
+      origin: { placeId: places.to?.place_id },
+      destination: { placeId: places.from?.place_id },
       travelMode: google.maps.TravelMode.DRIVING,
     };
-  }, [directions]);
+  }, [places]);
 
   useEffect(() => {
     if (!directionRequest) {

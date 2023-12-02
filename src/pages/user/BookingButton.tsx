@@ -21,9 +21,10 @@ import {
 } from "@chakra-ui/react";
 import { useAuthenticated, useBooking } from "../../hooks";
 import { VehicleType } from "../../types/booking";
+import { Places } from "../../components";
 
 type BookingButtonProps = {
-  directionResult?: google.maps.DirectionsResult;
+  places?: Places;
 };
 
 const steps = [
@@ -35,30 +36,28 @@ const steps = [
   { title: "Hoàn thành", description: "Đã thanh toán" },
 ];
 
-export function BookingButton({ directionResult }: BookingButtonProps) {
+export function BookingButton({ places }: BookingButtonProps) {
   const auth = useAuthenticated();
   const { onOpen, onClose } = useDisclosure();
   const { isLoading ,data, mutate } = useBooking();
 
   const onCarBooking = useCallback(() => {
     const now = new Date();
-    const { start_address, end_address, start_location, end_location } =
-      directionResult?.routes[0].legs[0] || {};
     mutate({
       customerId: auth?.customerId || "",
       startTime: now,
       bookingDetail: {
         startTime: now,
         vehicleType: VehicleType.FOUR_SEAT,
-        pickUplatitude: start_location?.lat() ?? 0,
-        pickUplongitude: start_location?.lng() ?? 0,
-        pickUpPoint: start_address ?? "",
-        dropOfflatitude: end_location?.lat() ?? 0,
-        dropOfflongitude: end_location?.lng() ?? 0,
-        dropOffPoint: end_address ?? "",
+        pickUplatitude: places?.from?.geometry?.location?.lat() ?? 0,
+        pickUplongitude: places?.from?.geometry?.location?.lng() ?? 0,
+        pickUpPoint: places?.from?.formatted_address ?? "",
+        dropOfflatitude: places?.to?.geometry?.location?.lat() ?? 0,
+        dropOfflongitude: places?.to?.geometry?.location?.lng() ?? 0,
+        dropOffPoint: places?.to?.formatted_address ?? "",
       },
     });
-  }, [auth?.customerId, directionResult?.routes, mutate]);
+  }, [auth?.customerId, places, mutate]);
 
   useEffect(() => {
     if (data) {
@@ -73,7 +72,7 @@ export function BookingButton({ directionResult }: BookingButtonProps) {
       <Button
         w="full"
         isLoading={isLoading}
-        isDisabled={!directionResult}
+        isDisabled={!places?.from || !places.to}
         colorScheme="whatsapp"
         onClick={onCarBooking}
       >

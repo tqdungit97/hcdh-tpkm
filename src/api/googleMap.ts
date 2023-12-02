@@ -1,6 +1,6 @@
-import { Directions } from "../components";
+import { Places } from "../components";
 
-export const getRoute = (directions: Directions) => {
+export const getRoute = (directions: Places) => {
   if (!directions.from || !directions.to) {
     return;
   }

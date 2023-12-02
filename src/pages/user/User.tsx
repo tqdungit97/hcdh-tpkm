@@ -2,17 +2,21 @@ import { useCallback, useEffect, useState } from "react";
 import { Box, VStack } from "@chakra-ui/react";
 import { useLoadScript } from "@react-google-maps/api";
 import { useGeolocation } from "../../hooks";
-import { AutoCompleteAddress, GoogleMap, Directions, AppHeader } from "../../components";
+import {
+  AutoCompleteAddress,
+  GoogleMap,
+  Places,
+  AppHeader,
+} from "../../components";
 import { BookingButton } from "./BookingButton";
 import { getPlaceFromCoordinates } from "../../api/googleMap";
 import { environment } from "../../environment";
 
 export function User() {
-  const [directions, setPlaces] = useState<Directions>({
+  const [places, setPlaces] = useState<Places>({
     from: undefined,
     to: undefined,
   });
-  const [directionResult, setDirectionResult] = useState<google.maps.DirectionsResult>();
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: environment.googleMapApiKey,
     libraries: ["places"],
@@ -47,11 +51,11 @@ export function User() {
     <VStack spacing="0">
       <AppHeader />
       <Box w="full" h="calc(60vh - 40px)">
-        <GoogleMap directions={directions} onDirectionResultChanged={setDirectionResult}/>
+        <GoogleMap places={places} onDirectionResultChanged={console.log} />
       </Box>
       <Box w="full" h="40%" p="16px">
         <AutoCompleteAddress
-          defaultPlace={directions.from}
+          defaultPlace={places.from}
           mb="8px"
           onChange={(from) => setPlaces((prev) => ({ ...prev, from }))}
         />
@@ -59,7 +63,7 @@ export function User() {
           mb="8px"
           onChange={(to) => setPlaces((prev) => ({ ...prev, to }))}
         />
-        <BookingButton directionResult={directionResult} />
+        <BookingButton places={places} />
       </Box>
     </VStack>
   );

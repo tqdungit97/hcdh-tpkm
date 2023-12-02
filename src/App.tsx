@@ -6,7 +6,13 @@ import ApplicationConfigProvider from "./ApplicationConfigProvider";
 
 import "./App.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    }
+  }
+});
 
 function App() {
   return (

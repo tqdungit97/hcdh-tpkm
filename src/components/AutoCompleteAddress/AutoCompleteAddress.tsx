@@ -41,9 +41,15 @@ export function AutoCompleteAddress({
 
   return (
     <GoogleMap mapContainerClassName={Styles.autoCompletePlacesContainer}>
-      <StandaloneSearchBox ref={ref} onPlacesChanged={onPlacesChanged} onLoad={() => {
-         ref.current?.containerElement.current?.classList.add(Styles.inputContainer)
-      }}>
+      <StandaloneSearchBox
+        ref={ref}
+        onPlacesChanged={onPlacesChanged}
+        onLoad={() => {
+          ref.current?.containerElement.current?.classList.add(
+            Styles.inputContainer
+          );
+        }}
+      >
         <InputGroup w="full" {...props} bg="transparent">
           <InputLeftElement>
             <Image src={IconLocation} alt="icon location" w="16px" />
