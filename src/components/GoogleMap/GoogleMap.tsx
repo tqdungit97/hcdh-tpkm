@@ -4,6 +4,7 @@ import {
   DirectionsRenderer,
   DirectionsService,
   GoogleMap as Map,
+  GoogleMapProps as BaseGoogleMapProps,
   MarkerF,
 } from "@react-google-maps/api";
 import { useGeolocation } from "../../hooks";
@@ -15,11 +16,11 @@ export type Directions = {
 };
 
 type GoogleMapProps = {
-  directions: Directions;
-  onDirectionResultChanged: (result?: google.maps.DirectionsResult) => void;
-};
+  directions?: Directions;
+  onDirectionResultChanged?: (result?: google.maps.DirectionsResult) => void;
+} & Partial<BaseGoogleMapProps>;
 
-export function GoogleMap({ directions, onDirectionResultChanged }: GoogleMapProps) {
+export function GoogleMap({ directions, onDirectionResultChanged, ...rest }: GoogleMapProps) {
   const geoLocation = useGeolocation();
   const [directionResult, setDirectionResult] =
     useState<google.maps.DirectionsResult>();
@@ -32,17 +33,17 @@ export function GoogleMap({ directions, onDirectionResultChanged }: GoogleMapPro
       if (result !== null) {
         if (status === "OK") {
           setDirectionResult(result);
-          onDirectionResultChanged(result);
+          onDirectionResultChanged?.(result);
         } else {
           console.log("response: ", result);
         }
       }
     },
-    []
+    [onDirectionResultChanged]
   );
 
   const directionRequest = useMemo((): google.maps.DirectionsRequest | null => {
-    if (!directions.from || !directions.to) {
+    if (!directions?.from || !directions?.to) {
       return null;
     }
     return {
@@ -55,7 +56,7 @@ export function GoogleMap({ directions, onDirectionResultChanged }: GoogleMapPro
   useEffect(() => {
     if (!directionRequest) {
       setDirectionResult(undefined);
-      onDirectionResultChanged(undefined);
+      onDirectionResultChanged?.(undefined);
     }
   }, [directionRequest, onDirectionResultChanged]);
 
@@ -75,12 +76,13 @@ export function GoogleMap({ directions, onDirectionResultChanged }: GoogleMapPro
             width: "100%",
             height: "100%",
           }}
+          {...rest}
         >
-          {!directionResult && directions.from && (
+          {!directionResult && (
             <MarkerF
               position={{
-                lat: directions.from.geometry?.location?.lat() ?? NaN,
-                lng: directions.from.geometry?.location?.lng() ?? NaN,
+                lat: geoLocation.coords.latitude,
+                lng: geoLocation.coords.longitude,
               }}
             />
           )}

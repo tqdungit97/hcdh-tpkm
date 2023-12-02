@@ -15,7 +15,8 @@ AxiosInstance.interceptors.request.use((config) => {
     ...config,
     headers: {
       ...config.headers,
-      "x-access-token": store.accessToken,
+      "x-access-token": store.auth?.accessToken,
+      "ngrok-skip-browser-warning": 69420
     } as unknown as AxiosRequestHeaders,
   };
 });

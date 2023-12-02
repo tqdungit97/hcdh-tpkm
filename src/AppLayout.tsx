@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useIsAuthenticated } from "./hooks";
+import { useAuthenticated } from "./hooks";
 
 export function AppLayout() {
-  const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthenticated();
 
-  if (!isAuthenticated) {
+  if (!auth) {
     return <Navigate to="/auth" />
   }
 

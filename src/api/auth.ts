@@ -1,7 +1,7 @@
 import { AxiosInstance } from ".";
 
 export type PostLoginPayload = {
-  email: string;
+  phoneNumber: string;
   password: string;
 };
 
@@ -11,11 +11,21 @@ export type PostLoginResponse = {
   accessTokenExpiryIn: number;
   refreshToken: string;
   refreshTokenExpiryIn: number;
+  role: RegisterRole;
+  fullName: string;
+  customerId?: number;
+  driverId?: number;
+  staffId?: number;
 };
 export const postLogin = (payload: PostLoginPayload) => {
   return AxiosInstance.post<PostLoginResponse>("/api/auth/v1/login", payload);
 };
 
+export enum RegisterRole {
+  CUSTOMER = "CUSTOMER",
+  DRIVER = "DRIVER",
+  STAFF = "STAFF",
+}
 export type PostRegisterPayload = {
   username: string;
   password: string;
@@ -25,6 +35,7 @@ export type PostRegisterPayload = {
   email: string;
   address: string;
   dob?: string;
+  role: RegisterRole;
 };
 export const postRegister = (payload: PostRegisterPayload) => {
   return AxiosInstance.post<PostRegisterPayload>(

@@ -3,42 +3,60 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
+  InputGroup,
+  InputLeftElement,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useAuthentication } from "../../hooks";
-import { PostRegisterPayload } from "../../api/auth";
+import { PostRegisterPayload, RegisterRole } from "../../api/auth";
 
 export function Register() {
   const {
     register,
-    formState: { errors, isValid },
+    setValue,
     handleSubmit,
+    formState: { errors, isValid },
   } = useForm<PostRegisterPayload>({
     mode: "all",
     defaultValues: {
       dob: new Date().toISOString(),
+      role: RegisterRole.CUSTOMER,
     },
   });
   const { register: registerApi, isLoading } = useAuthentication();
 
   const onSubmit = (values: PostRegisterPayload) =>
-    registerApi({ ...values, name: values.fullName.split(" ").pop() });
+    registerApi({
+      ...values,
+      phoneNumber: `84${values.phoneNumber}`,
+      name: values.fullName.split(" ").pop(),
+    });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl marginBottom="8px" isInvalid={!!errors.email}>
-        <FormLabel aria-required htmlFor="email" marginBottom="4px">
-          Email đăng nhập
+      <FormControl marginBottom="8px" isInvalid={!!errors.phoneNumber}>
+        <FormLabel aria-required htmlFor="phoneNumber" marginBottom="4px">
+          Số điện thoại
         </FormLabel>
-        <Input
-          id="email"
-          type="email"
-          {...register("email", {
-            required: { value: true, message: "Chưa nhập email" },
-          })}
-        />
-        <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
+        <InputGroup>
+          <InputLeftElement>+84</InputLeftElement>
+          <Input
+            id="phoneNumber"
+            prefix="+84"
+            {...register("phoneNumber", {
+              required: { value: true, message: "Chưa nhập số điện thoại" },
+              pattern: {
+                value: /([3|5|7|8|9])+([0-9]{8})\b/g,
+                message: "Số điện thoại không hợp lệ",
+              },
+            })}
+          />
+        </InputGroup>
+        <FormErrorMessage>{errors?.phoneNumber?.message}</FormErrorMessage>
       </FormControl>
 
       <FormControl marginBottom="8px" isInvalid={!!errors.fullName}>
@@ -67,7 +85,7 @@ export function Register() {
         <FormErrorMessage>{errors?.address?.message}</FormErrorMessage>
       </FormControl>
 
-      <FormControl marginBottom="16px" isInvalid={!!errors.password}>
+      <FormControl marginBottom="8px" isInvalid={!!errors.password}>
         <FormLabel aria-required htmlFor="password" marginBottom="4px">
           Mật khẩu
         </FormLabel>
@@ -80,6 +98,21 @@ export function Register() {
         />
         <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
       </FormControl>
+      <FormControl marginBottom="16px" isInvalid={!!errors.password}>
+        <FormLabel aria-required htmlFor="role" marginBottom="4px">
+          Loại tài khoản
+        </FormLabel>
+        <RadioGroup
+          id="role"
+          defaultValue={`${RegisterRole.CUSTOMER}`}
+          onChange={(role: RegisterRole) => setValue("role", role)}
+        >
+          <HStack spacing="16px">
+            <Radio value={`${RegisterRole.CUSTOMER}`}>Khách hàng</Radio>
+            <Radio value={`${RegisterRole.DRIVER}`}>Tài xế</Radio>
+          </HStack>
+        </RadioGroup>
+      </FormControl>
 
       <Button
         type="submit"
@@ -87,7 +120,7 @@ export function Register() {
         isDisabled={!isValid || isLoading}
         colorScheme="whatsapp"
       >
-        Đăng nhập
+        Đăng ký
       </Button>
     </form>
   );

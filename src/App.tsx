@@ -15,6 +15,7 @@ function App() {
         toastOptions={{ defaultOptions: { position: "top-right" } }}
       >
         <QueryClientProvider client={queryClient}>
+          
           <AppGeolocation />
           <AppRouter />
         </QueryClientProvider>

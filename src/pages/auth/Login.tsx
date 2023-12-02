@@ -7,35 +7,31 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useAuthentication } from "../../hooks";
-
-interface ILoginFormInput {
-  email: string;
-  password: string;
-}
+import { PostLoginPayload } from "../../api/auth";
 
 export function Login() {
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
-  } = useForm<ILoginFormInput>({ mode: "all" });
+  } = useForm<PostLoginPayload>({ mode: "all" });
   const { login, isLoading } = useAuthentication();
 
-  const onSubmit = (values: ILoginFormInput) => login(values);
+  const onSubmit = (values: PostLoginPayload) => login(values);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl marginBottom="8px" isInvalid={!!errors.email}>
-        <FormLabel aria-required htmlFor="user-name" marginBottom="4px">
-          Email đăng nhập
+      <FormControl marginBottom="8px" isInvalid={!!errors.phoneNumber}>
+        <FormLabel aria-required htmlFor="phoneNumber" marginBottom="4px">
+          Số điện thoại
         </FormLabel>
         <Input
-          id="name"
-          {...register("email", {
-            required: { value: true, message: "Chưa nhập email đăng nhập" },
+          id="phoneNumber"
+          {...register("phoneNumber", {
+            required: { value: true, message: "Chưa nhập số điện thoại" },
           })}
         />
-        <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors?.phoneNumber?.message}</FormErrorMessage>
       </FormControl>
       <FormControl marginBottom="16px" isInvalid={!!errors.password}>
         <FormLabel aria-required htmlFor="password" marginBottom="4px">

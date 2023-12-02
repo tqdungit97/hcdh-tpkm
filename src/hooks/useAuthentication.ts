@@ -5,7 +5,7 @@ import { useApplicationStore } from "../store/useApplicationStore";
 
 export function useAuthentication() {
   const toast = useToast();
-  const { setAccessToken, setRefreshToken } = useApplicationStore();
+  const { setAuth, clearAuth } = useApplicationStore();
 
   const {
     mutate: login,
@@ -20,8 +20,7 @@ export function useAuthentication() {
       });
     },
     onSuccess: ({ data }) => {
-      setAccessToken(data.accessToken);
-      setRefreshToken(data.refreshToken);
+      setAuth(data);
     }
   });
   const {
@@ -36,14 +35,15 @@ export function useAuthentication() {
         status: "error",
       });
     },
-    onSuccess: (_, { email, password }) => {
-      login({ email, password })
+    onSuccess: (_, { phoneNumber, password }) => {
+      login({ phoneNumber, password })
     },
   });
 
   return {
     login,
     register,
+    logout: clearAuth,
     isLoading: loginLoading || registerLoading,
     isError: loginError || registerError
   };

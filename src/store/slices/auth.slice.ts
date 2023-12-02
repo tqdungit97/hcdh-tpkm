@@ -1,17 +1,14 @@
-import { StateCreator } from 'zustand';
+import { StateCreator } from "zustand";
+import { PostLoginResponse } from "../../api/auth";
 
 export type AuthSlice = {
-  accessToken?: string;
-  refreshToken?: string;
-  setAccessToken: (token: string) => void;
-  setRefreshToken: (token: string) => void;
-  clearTokens: () => void;
+  auth?: PostLoginResponse;
+  setAuth: (auth: PostLoginResponse) => void;
+  clearAuth: () => void;
 };
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
-  token: undefined,
-  refreshToken: undefined,
-  setAccessToken: (accessToken: string) => set(() => ({ accessToken })),
-  setRefreshToken: (refreshToken: string) => set(() => ({ refreshToken })),
-  clearTokens: () => set(() => ({ accessToken: undefined, refreshToken: undefined })),
+  auth: undefined,
+  setAuth: (auth: PostLoginResponse) => set(() => ({ auth })),
+  clearAuth: () => set(() => ({ auth: undefined })),
 });

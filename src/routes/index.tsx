@@ -3,10 +3,11 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import { Home } from "../pages/home";
-import { AuthLayout, Login, Register } from "../pages/auth";
 import { AppLayout } from "../AppLayout";
-
+import { Home } from "../pages/home";
+import { User } from "../pages/user";
+import { Driver } from "../pages/driver";
+import { AuthLayout, Login, Register } from "../pages/auth";
 const router = createBrowserRouter([
   {
     path: "",
@@ -19,6 +20,14 @@ const router = createBrowserRouter([
       {
         path: "/home",
         Component: Home,
+      },
+      {
+        path: "/driver",
+        Component: Driver,
+      },
+      {
+        path: "/user",
+        Component: User,
       },
     ],
   },

@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Login, Register } from ".";
-import { useIsAuthenticated } from "../../hooks";
+import { useAuthenticated } from "../../hooks";
 
 import AppIcon from "../../assets/taxi.png";
 
@@ -21,11 +21,11 @@ const MapPathToTab = {
 };
 
 export function AuthLayout() {
-  const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthenticated();
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (isAuthenticated) {
+  if (auth) {
     return <Navigate to="/" />;
   }
 
