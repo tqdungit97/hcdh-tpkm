@@ -15,7 +15,7 @@ export function BingMap() {
   const geoLocation = useGeolocation();
   const mapRef = useRef<HTMLDivElement>({} as HTMLDivElement);
   const status = useScript(
-    `https://www.bing.com/api/maps/mapcontrol?key=${environment.bingMapApiKey}`
+    `http://www.bing.com/api/maps/mapcontrol?key=${environment.bingMapApiKey}`
   );
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function BingMap() {
           showDashboard: false,
           showLogo: false,
           showTrafficButton: false,
-          showTermsLink: false
+          showTermsLink: false,
         });
         const pin = new Microsoft.Maps.Pushpin(center);
         map.entities.push(pin);
@@ -44,5 +44,5 @@ export function BingMap() {
     }
   }, [status, geoLocation, setMap]);
 
-  return <Box ref={mapRef} w="full" h="full" />;
+  return <Box ref={mapRef} w="full" h="full" sx={{ '.CopyrightControl': { display: 'none' } }}/>;
 }

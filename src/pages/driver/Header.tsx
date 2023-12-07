@@ -1,15 +1,16 @@
-import { Text, Switch, useDisclosure } from "@chakra-ui/react";
+import { Text, Switch } from "@chakra-ui/react";
 import { AppHeader } from "../../components";
+import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 
 export function Header() {
-  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: false });
+  const { isOnline, isLoading, toggleOnlineStatus } = useOnlineStatus();
 
   return (
     <AppHeader>
       <Text fontSize="small" fontWeight="bold">
-        {isOpen ? "Online" : "Offline"}
+        {isOnline ? "Online" : "Offline"}
       </Text>
-      <Switch checked={isOpen} onChange={onToggle} />
+      <Switch isDisabled={isLoading} isChecked={isOnline} onChange={toggleOnlineStatus} />
     </AppHeader>
   );
 }

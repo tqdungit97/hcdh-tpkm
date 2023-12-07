@@ -1,9 +1,9 @@
 import { AxiosInstance } from ".";
 import {
+  Booking,
   BaseBookingDetail,
-  BookingDetail,
-  BookingStatus,
   DriverInfo,
+  BookingStatus,
 } from "../types/booking";
 
 export type PostBookingPayload = {
@@ -13,16 +13,7 @@ export type PostBookingPayload = {
 };
 
 export type PostBookingResponse = {
-  booking: {
-    bookingDetail: BookingDetail;
-    code: string;
-    customerId: number;
-    id: number;
-    startTime: Date;
-    status: BookingStatus;
-    thoi_gian_cap_nhat: Date;
-    thoi_gian_tao: Date;
-  };
+  booking: Booking;
   driver: DriverInfo;
   minDistance: number;
   pricing: number;
@@ -30,4 +21,21 @@ export type PostBookingResponse = {
 };
 
 export const postBooking = (payload: PostBookingPayload) =>
-  AxiosInstance.post<PostBookingResponse>("/api/booking/v1", payload);
+  AxiosInstance.post<PostBookingResponse>("/api/bookings", payload);
+
+export type GetUserBookingsParams = {
+  customerId: string;
+};
+
+export const getUserBookings = (params: GetUserBookingsParams) => {
+  const queryParams = new URLSearchParams(params);
+  return AxiosInstance.get<Booking[]>(
+    `/api/bookings?${queryParams.toString()}`
+  );
+};
+
+export const putUpdateBookingStatus = (payload: {
+  bookingId: number;
+  actionType: BookingStatus;
+  assignedDriverId?: number;
+}) => AxiosInstance.put("/api/bookings/booking-action", payload);

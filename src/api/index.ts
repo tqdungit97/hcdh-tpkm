@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestHeaders } from "axios";
+import Axios, { AxiosError, AxiosRequestHeaders, HttpStatusCode } from "axios";
 import { environment } from "../environment";
 import { useApplicationStore } from "../store/useApplicationStore";
 
@@ -16,8 +16,18 @@ AxiosInstance.interceptors.request.use((config) => {
     headers: {
       ...config.headers,
       "x-access-token": store.auth?.accessToken,
-      "ngrok-skip-browser-warning": 69420
+      "ngrok-skip-browser-warning": 69420,
     } as unknown as AxiosRequestHeaders,
   };
 });
-AxiosInstance.interceptors.response.use((response) => response.data);
+AxiosInstance.interceptors.response.use(
+  (response) => response.data,
+  (error: AxiosError) => {
+    const { clearAuth, clearBooking } = useApplicationStore.getState();
+    if (error.response?.status === HttpStatusCode.Unauthorized) {
+      clearAuth();
+      clearBooking();
+    }
+    return Promise.reject(error);
+  }
+);

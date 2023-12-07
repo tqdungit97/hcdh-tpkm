@@ -3,12 +3,9 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Input,
   InputGroup,
   InputLeftElement,
-  Radio,
-  RadioGroup,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useAuthentication } from "../../hooks";
@@ -17,7 +14,6 @@ import { PostRegisterPayload, RegisterRole } from "../../api/auth";
 export function Register() {
   const {
     register,
-    setValue,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<PostRegisterPayload>({
@@ -85,7 +81,7 @@ export function Register() {
         <FormErrorMessage>{errors?.address?.message}</FormErrorMessage>
       </FormControl>
 
-      <FormControl marginBottom="8px" isInvalid={!!errors.password}>
+      <FormControl marginBottom="16px" isInvalid={!!errors.password}>
         <FormLabel aria-required htmlFor="password" marginBottom="4px">
           Mật khẩu
         </FormLabel>
@@ -97,21 +93,6 @@ export function Register() {
           })}
         />
         <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
-      </FormControl>
-      <FormControl marginBottom="16px" isInvalid={!!errors.password}>
-        <FormLabel aria-required htmlFor="role" marginBottom="4px">
-          Loại tài khoản
-        </FormLabel>
-        <RadioGroup
-          id="role"
-          defaultValue={`${RegisterRole.CUSTOMER}`}
-          onChange={(role: RegisterRole) => setValue("role", role)}
-        >
-          <HStack spacing="16px">
-            <Radio value={`${RegisterRole.CUSTOMER}`}>Khách hàng</Radio>
-            <Radio value={`${RegisterRole.DRIVER}`}>Tài xế</Radio>
-          </HStack>
-        </RadioGroup>
       </FormControl>
 
       <Button

@@ -1,14 +1,24 @@
 import { StateCreator } from "zustand";
-import { PostBookingResponse } from "../../api/booking";
+import { Booking } from "../../types/booking";
 
 export type BookingSlice = {
-  bookingData?: PostBookingResponse;
-  setBooking: (booking: PostBookingResponse) => void;
+  bookingData?: Booking;
+  setBooking: (booking?: Booking) => void;
+  updateBooking: (value: Partial<Booking>) => void;
   clearBooking: () => void;
 };
 
-export const creatBookingSlice: StateCreator<BookingSlice> = (set) => ({
+export const creatBookingSlice: StateCreator<BookingSlice> = (
+  set,
+  _get,
+  api
+) => ({
   bookingData: undefined,
-  setBooking: (bookingData: PostBookingResponse) => set(() => ({ bookingData })),
+  setBooking: (bookingData?: Booking) => set(() => ({ bookingData })),
+  updateBooking: (value: Partial<Booking>) =>
+    api.setState((previous) => ({
+      ...previous,
+      bookingData: { ...previous.bookingData, ...value } as Booking,
+    })),
   clearBooking: () => set(() => ({ bookingData: undefined })),
 });

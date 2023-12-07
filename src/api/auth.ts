@@ -17,8 +17,9 @@ export type PostLoginResponse = {
   driverId?: number;
   staffId?: number;
 };
+
 export const postLogin = (payload: PostLoginPayload) => {
-  return AxiosInstance.post<PostLoginResponse>("/api/auth/v1/login", payload);
+  return AxiosInstance.post<PostLoginResponse>("/api/auth/login", payload);
 };
 
 export enum RegisterRole {
@@ -39,7 +40,7 @@ export type PostRegisterPayload = {
 };
 export const postRegister = (payload: PostRegisterPayload) => {
   return AxiosInstance.post<PostRegisterPayload>(
-    "/api/user/v1/register",
+    "/api/users/register",
     payload
   );
 };

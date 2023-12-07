@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Box,
   Button,
   Divider,
@@ -13,20 +12,25 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Booking } from "../../types/booking";
+import { Customer } from "../../types/user";
 
 type BookingPoppupProps = {
-  isOpen?: boolean;
+  bookingData?: {
+    booking: Booking;
+    customer: Customer;
+  };
   onAccept: () => void;
   onCancel: () => void;
 };
-export function BookingPoppup({
-  isOpen,
+export function IncomingBookingPopup({
+  bookingData,
   onAccept,
   onCancel,
 }: BookingPoppupProps) {
   return (
     <Modal
-      isOpen={isOpen ?? false}
+      isOpen={!!bookingData}
       isCentered
       closeOnEsc={false}
       closeOnOverlayClick={false}
@@ -37,25 +41,20 @@ export function BookingPoppup({
         <ModalHeader p="8px">
           <Flex justifyContent="space-between">
             <Avatar size="sm" mr="8px" borderRadius="8px" flexShrink="0" />
-            <Box textAlign="left" w="full" lineHeight="0.8">
+            <Box textAlign="left" w="full">
               <Text fontSize="small" fontWeight="bold">
-                Trần Quốc Dũng
+                {bookingData?.customer?.fullName}
               </Text>
-              <Badge
-                fontSize="xx-small"
-                p="2px 4px"
-                borderRadius="8px"
-                colorScheme="green"
-              >
-                Khuyến mãi
-              </Badge>
+              <Text fontSize="x-small">
+                {bookingData?.customer?.phoneNumber}
+              </Text>
             </Box>
             <Box textAlign="right" flexShrink="0">
               <Text fontSize="small" fontWeight="bold">
-                $25.00
+                {bookingData?.booking?.amount ?? 0} VNĐ
               </Text>
               <Text fontSize="x-small" color="grey">
-                2.2km
+                {bookingData?.booking?.minDistance}km
               </Text>
             </Box>
           </Flex>
@@ -66,13 +65,13 @@ export function BookingPoppup({
               <Text color="gray" fontSize="smaller" fontWeight="bold">
                 ĐIỂM ĐÓN
               </Text>
-              <Text>164 Huỳnh Tấn Phát, Q7</Text>
+              <Text>{bookingData?.booking?.bookingDetail?.pickUpPoint}</Text>
             </Box>
             <Box w="full" px="8px">
               <Text color="gray" fontSize="smaller" fontWeight="bold">
                 ĐIỂM ĐẾN
               </Text>
-              <Text>227 Nguyễn Văn Cừ, Q1</Text>
+              <Text>{bookingData?.booking?.bookingDetail?.dropOffPoint}</Text>
             </Box>
           </VStack>
           <Divider />

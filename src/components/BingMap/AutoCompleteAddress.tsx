@@ -39,7 +39,6 @@ export function AutoCompleteAddress({
           map,
           maxResults: 4,
         });
-        manager.dispose
         setTimeout(() => {
           manager.attachAutosuggest(
             `#${IDS.input}`,

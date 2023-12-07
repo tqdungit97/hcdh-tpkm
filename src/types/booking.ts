@@ -7,22 +7,26 @@ export enum VehicleType {
 
 export enum BookingStatus {
   BOOKED = "BOOKED",
-  ONBOARDING="ONBOARDING",
-  ARRIVED="ARRIVED",
-  CANCELED="CANCELED",
-  PAID="PAID",
+  ONBOARDING = "ONBOARDING",
+  ARRIVED = "ARRIVED",
+  CANCELLED = "CANCELLED",
+  PAID = "PAID",
   DRIVER_FOUND = "DRIVER_FOUND",
+  DRIVER_CONFIRMED = "DRIVER_CONFIRMED",
   DRIVER_COME = "DRIVER_COME",
   DRIVER_NOT_FOUND = "DRIVER_NOT_FOUND",
   WAITING_FOR_DRIVER = "WAITING_FOR_DRIVER",
+
+  USER_CANCELLED = "USER_CANCELLED",
+  CONFIRMED = "CONFIRMED",
 }
 
 export type BaseBookingDetail = {
   vehicleType: VehicleType;
-  pickUplongitude: number;
-  pickUplatitude: number;
-  dropOfflongitude: number;
-  dropOfflatitude: number;
+  pickUpLongitude: number;
+  pickUpLatitude: number;
+  dropOffLongitude: number;
+  dropOffLatitude: number;
   pickUpPoint: string;
   dropOffPoint: string;
 };
@@ -46,6 +50,9 @@ export type Vehicle = {
   thoi_gian_cap_nhat: string;
   ma_tai_xe: number;
 };
+
+export type DriverOnlineStatus = "ONLINE" | "OFFLINE";
+
 export type DriverInfo = {
   id: number;
   userId: number;
@@ -57,4 +64,27 @@ export type DriverInfo = {
   thoi_gian_cap_nhat: string;
   ma_nguoi_dung: number;
   vehicle: Vehicle;
+  driverLoginSession?: {
+    id: number;
+    driverId: number;
+    currentLat: number;
+    currentLong: number;
+    status: DriverOnlineStatus;
+    ma_tai_xe: number;
+  };
+};
+
+export type Booking = {
+  bookingDetail: BookingDetail;
+  code: string;
+  customerId: number;
+  id: number;
+  startTime: Date;
+  status: BookingStatus;
+  thoi_gian_cap_nhat: Date;
+  thoi_gian_tao: Date;
+  driver?: DriverInfo;
+  minDistance?: number;
+  amount?: number;
+  user?: unknown;
 };
