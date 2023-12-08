@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, Radio, RadioGroup, VStack } from "@chakra-ui/react";
 import { AppHeader } from "../../components";
 import {
   BingMap,
@@ -13,11 +13,15 @@ import { BookingButton } from "./BookingButton";
 import { useAuthenticated, useBooking } from "../../hooks";
 import { getUserBookings } from "../../api/booking";
 import { isInCompletedBooking } from "../../helpers/booking";
+import { VehicleType } from "../../types/booking";
 
 export function User() {
   const auth = useAuthenticated();
   const { bookingData, setBooking } = useBooking();
   const [directions, setDirections] = useState<Directions>();
+  const [vehicleType, setVehicleType] = useState<VehicleType>(
+    VehicleType.FOUR_SEAT
+  );
 
   const getUserInCompletedBooking = useCallback(async () => {
     try {
@@ -56,7 +60,23 @@ export function User() {
             mb="8px"
             onChange={(to) => setDirections((prev) => ({ ...prev, to }))}
           />
-          <BookingButton directions={directions} />
+          <RadioGroup
+            marginY="16px"
+            textAlign="left"
+            value={vehicleType}
+            onChange={(type) => setVehicleType(type as VehicleType)}
+          >
+            <Radio value={VehicleType.FOUR_SEAT} mr="8px">
+              Xe 4 chỗ
+            </Radio>
+            <Radio value={VehicleType.FIVE_SEAT} mr="8px">
+              Xe 5 chỗ
+            </Radio>
+            <Radio value={VehicleType.SEVEN_SEAT} mr="8px">
+              Xe 7 chỗ
+            </Radio>
+          </RadioGroup>
+          <BookingButton vehicleType={vehicleType} directions={directions} />
         </Box>
       </VStack>
       <BookingPopup />

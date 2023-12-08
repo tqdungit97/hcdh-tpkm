@@ -1,24 +1,18 @@
 import { useCallback } from "react";
-import {
-  Button,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Button, useDisclosure } from "@chakra-ui/react";
 import { useAuthenticated, useBooking } from "../../hooks";
 import { VehicleType } from "../../types/booking";
 import { Directions } from "../../components/BingMap";
 
 type BookingButtonProps = {
+  vehicleType: VehicleType;
   directions?: Directions;
 };
 
-export function BookingButton({ directions }: BookingButtonProps) {
+export function BookingButton({ directions, vehicleType }: BookingButtonProps) {
   const auth = useAuthenticated();
   const { onOpen } = useDisclosure();
-  const {
-    isLoading,
-    bookingData,
-    createBooking,
-  } = useBooking();
+  const { isLoading, bookingData, createBooking } = useBooking();
 
   const onCarBooking = useCallback(() => {
     const now = new Date();
@@ -27,7 +21,7 @@ export function BookingButton({ directions }: BookingButtonProps) {
       startTime: now,
       bookingDetail: {
         startTime: now,
-        vehicleType: VehicleType.FOUR_SEAT,
+        vehicleType: vehicleType,
         pickUpLatitude: directions?.from?.location?.latitude ?? 0,
         pickUpLongitude: directions?.from?.location?.longitude ?? 0,
         pickUpPoint: directions?.from?.address?.formattedAddress ?? "",
@@ -36,7 +30,7 @@ export function BookingButton({ directions }: BookingButtonProps) {
         dropOffPoint: directions?.to?.address?.formattedAddress ?? "",
       },
     });
-  }, [auth?.customerId, directions, createBooking]);
+  }, [auth?.customerId, directions, vehicleType, createBooking]);
 
   return (
     <Button

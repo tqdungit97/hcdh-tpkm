@@ -97,14 +97,15 @@ export function Driver() {
 
   return (
     <VStack spacing="0">
-      {bookingData?.booking.status === BookingStatus.DRIVER_FOUND && (
-        <IncomingBookingPopup
-          bookingData={bookingData}
-          onAccept={updateBooking(BookingStatus.CONFIRMED)}
-          onCancel={updateBooking(BookingStatus.CANCELLED)}
-        />
-      )}
-      {bookingData?.booking &&
+      {bookingData &&
+        bookingData?.booking.status === BookingStatus.DRIVER_FOUND && (
+          <IncomingBookingPopup
+            bookingData={bookingData}
+            onAccept={updateBooking(BookingStatus.CONFIRMED)}
+            onCancel={updateBooking(BookingStatus.CANCELLED)}
+          />
+        )}
+      {bookingData &&
         bookingData?.booking.status !== BookingStatus.DRIVER_FOUND && (
           <BookingStatusPoppup
             updateBookingStatus={(status) => updateBooking(status)()}
