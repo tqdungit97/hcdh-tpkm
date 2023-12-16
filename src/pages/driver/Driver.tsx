@@ -39,12 +39,21 @@ export function Driver() {
         assignedDriverId: bookingData?.booking?.driver?.id,
       },
       {
-        onSuccess: () => {
+        onSuccess: (_, variables) => {
           if (actionType === BookingStatus.PAID) {
             toast({
               status: "success",
               title: "Đã hoàn thành chuyến đi",
             });
+          }
+          if (
+            [
+              BookingStatus.PAID,
+              BookingStatus.CANCELLED,
+              BookingStatus.USER_CANCELLED,
+              BookingStatus.USER_CANCELLED,
+            ].includes(variables.actionType)
+          ) {
             setBookingData(undefined);
           } else {
             setBookingData((previous) => {
@@ -70,10 +79,11 @@ export function Driver() {
       socket.open();
       socket.on(`${user?.driver?.id}`, (event) => {
         const data = JSON.parse(event) as {
+          status?: BookingStatus;
           booking: Booking;
           customer: Customer;
         };
-        if (data.booking.status === BookingStatus.DRIVER_FOUND) {
+        if (data?.booking?.status === BookingStatus.DRIVER_FOUND) {
           setBookingData(data);
         }
         if (
@@ -81,7 +91,7 @@ export function Driver() {
             BookingStatus.USER_CANCELLED,
             BookingStatus.CANCELLED,
             BookingStatus.PAID,
-          ].includes(data.booking.status)
+          ].includes(data?.status ?? data.booking.status)
         ) {
           setBookingData(undefined);
         }

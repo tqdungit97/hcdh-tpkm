@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { Booking } from "../../types/booking";
 import { Customer } from "../../types/user";
+import { formatNumber } from "../../utils";
 
 type BookingPoppupProps = {
   bookingData?: {
@@ -51,10 +52,10 @@ export function IncomingBookingPopup({
             </Box>
             <Box textAlign="right" flexShrink="0">
               <Text fontSize="small" fontWeight="bold">
-                {bookingData?.booking?.amount ?? 0} VNĐ
+                {formatNumber(bookingData?.booking?.amount ?? 0)} VNĐ
               </Text>
               <Text fontSize="x-small" color="grey">
-                {bookingData?.booking?.minDistance}km
+                {formatNumber(bookingData?.booking?.minDistance ?? 0)}km
               </Text>
             </Box>
           </Flex>

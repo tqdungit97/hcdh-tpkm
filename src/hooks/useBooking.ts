@@ -30,9 +30,12 @@ export function useBooking() {
   const updateBookingMutation = useMutation(putUpdateBookingStatus, {
     onSuccess: (_, variables) => {
       if (
-        [BookingStatus.CANCELLED, BookingStatus.USER_CANCELLED].includes(
-          variables.actionType
-        )
+        [
+          BookingStatus.PAID,
+          BookingStatus.CANCELLED,
+          BookingStatus.USER_CANCELLED,
+          BookingStatus.USER_CANCELLED,
+        ].includes(variables.actionType)
       ) {
         clearBooking();
       } else {
