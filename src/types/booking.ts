@@ -23,20 +23,20 @@ export enum BookingStatus {
 
 export type BaseBookingDetail = {
   vehicleType: VehicleType;
-  pickUpLongitude: number;
-  pickUpLatitude: number;
-  dropOffLongitude: number;
-  dropOffLatitude: number;
-  pickUpPoint: string;
-  dropOffPoint: string;
+  pickupLongitude: number;
+  pickupLatitude: number;
+  returnLongitude: number;
+  returnLatitude: number;
+  pickupLocation: string;
+  returnLocation: string;
 };
 
 export type BookingDetail = {
   id: number;
   ma_dat_xe: number;
-  thoi_gian_cap_nhat: Date;
-  thoi_gian_tao: Date;
-  bookingId: number;
+  updatedAt: Date;
+  createdAt: Date;
+  orderId: number;
 } & BaseBookingDetail;
 
 export type Vehicle = {
@@ -46,8 +46,8 @@ export type Vehicle = {
   model: string;
   licensePlate: string;
   image: string | null;
-  thoi_gian_tao: string;
-  thoi_gian_cap_nhat: string;
+  createdAt: string;
+  updatedAt: string;
   ma_tai_xe: number;
 };
 
@@ -60,29 +60,28 @@ export type DriverInfo = {
   licenseType: string;
   licenseExpiry: string;
   vehicleType: VehicleType;
-  thoi_gian_tao: string;
-  thoi_gian_cap_nhat: string;
+  createdAt: string;
+  updatedAt: string;
   ma_nguoi_dung: number;
   vehicle: Vehicle;
-  driverLoginSession?: {
+  onlineSession?: {
     id: number;
     driverId: number;
     currentLat: number;
     currentLong: number;
-    status: DriverOnlineStatus;
-    ma_tai_xe: number;
+    onlineStatus: DriverOnlineStatus;
   };
 };
 
 export type Booking = {
-  bookingDetail: BookingDetail;
+  orderDetail: BookingDetail;
   code: string;
   customerId: number;
   id: number;
   startTime: Date;
   status: BookingStatus;
-  thoi_gian_cap_nhat: Date;
-  thoi_gian_tao: Date;
+  updatedAt: Date;
+  createdAt: Date;
   driver?: DriverInfo;
   minDistance?: number;
   amount?: number;

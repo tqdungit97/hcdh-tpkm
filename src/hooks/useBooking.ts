@@ -12,7 +12,7 @@ export function useBooking() {
 
   const createBookingMutation = useMutation(postBooking, {
     onSuccess: (data) => {
-      setBooking(data?.data?.booking);
+      setBooking(data?.data);
     },
     onError: (error: AxiosError) => {
       let errorMessage = error.message;

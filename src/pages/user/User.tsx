@@ -14,8 +14,10 @@ import { useAuthenticated, useBooking } from "../../hooks";
 import { getUserBookings } from "../../api/booking";
 import { isInCompletedBooking } from "../../helpers/booking";
 import { VehicleType } from "../../types/booking";
+import { useSocketIO } from "../../hooks/useSocketIO";
 
 export function User() {
+  const socket = useSocketIO();
   const auth = useAuthenticated();
   const { bookingData, setBooking } = useBooking();
   const [directions, setDirections] = useState<Directions>();
@@ -28,8 +30,8 @@ export function User() {
       const { data: bookingList } = await getUserBookings({
         customerId: `${auth?.customerId}`,
       });
-      const isBookingInCompleted = isInCompletedBooking(bookingList[0]);
-      setBooking(isBookingInCompleted ? bookingList[0] : undefined);
+      const incompleteBooking = bookingList.find(isInCompletedBooking);
+      setBooking(incompleteBooking);
     } catch (error) {
       console.log(error);
     }
@@ -38,6 +40,14 @@ export function User() {
   useEffect(() => {
     getUserInCompletedBooking();
   }, [getUserInCompletedBooking]);
+
+  useEffect(() => {
+    socket.open();
+    return () => {
+      socket.disconnect();
+      socket.close();
+    }
+  }, [socket]);
 
   return (
     <BingMapProvider>

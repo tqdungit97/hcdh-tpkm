@@ -19,15 +19,15 @@ export function BookingButton({ directions, vehicleType }: BookingButtonProps) {
     createBooking({
       customerId: auth?.customerId || "",
       startTime: now,
-      bookingDetail: {
+      orderDetail: {
         startTime: now,
         vehicleType: vehicleType,
-        pickUpLatitude: directions?.from?.location?.latitude ?? 0,
-        pickUpLongitude: directions?.from?.location?.longitude ?? 0,
-        pickUpPoint: directions?.from?.address?.formattedAddress ?? "",
-        dropOffLatitude: directions?.to?.location?.latitude ?? 0,
-        dropOffLongitude: directions?.to?.location?.longitude ?? 0,
-        dropOffPoint: directions?.to?.address?.formattedAddress ?? "",
+        pickupLatitude: directions?.from?.location?.latitude ?? 0,
+        pickupLongitude: directions?.from?.location?.longitude ?? 0,
+        pickupLocation: directions?.from?.address?.formattedAddress ?? "",
+        returnLatitude: directions?.to?.location?.latitude ?? 0,
+        returnLongitude: directions?.to?.location?.longitude ?? 0,
+        returnLocation: directions?.to?.address?.formattedAddress ?? "",
       },
     });
   }, [auth?.customerId, directions, vehicleType, createBooking]);

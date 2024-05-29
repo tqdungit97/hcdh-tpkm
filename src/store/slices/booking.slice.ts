@@ -1,3 +1,4 @@
+import merge from 'lodash/merge';
 import { StateCreator } from "zustand";
 import { Booking } from "../../types/booking";
 
@@ -18,7 +19,7 @@ export const creatBookingSlice: StateCreator<BookingSlice> = (
   updateBooking: (value: Partial<Booking>) =>
     api.setState((previous) => ({
       ...previous,
-      bookingData: { ...previous.bookingData, ...value } as Booking,
+      bookingData: merge<Booking | undefined, Partial<Booking>>(previous.bookingData, value),
     })),
   clearBooking: () => set(() => ({ bookingData: undefined })),
 });

@@ -34,7 +34,7 @@ export function Driver() {
   const updateBooking = (actionType: BookingStatus) => () => {
     updateBookingStatus(
       {
-        bookingId: bookingData?.booking?.id ?? -1,
+        orderId: bookingData?.booking?.id ?? -1,
         actionType: actionType,
         assignedDriverId: bookingData?.booking?.driver?.id,
       },
@@ -75,8 +75,8 @@ export function Driver() {
   };
 
   useEffect(() => {
+    socket.open();
     if (isOnline) {
-      socket.open();
       socket.on(`${user?.driver?.id}`, (event) => {
         const data = JSON.parse(event) as {
           status?: BookingStatus;
@@ -99,10 +99,6 @@ export function Driver() {
     } else {
       socket.disconnect();
     }
-    return () => {
-      socket.disconnect();
-      socket.close();
-    };
   }, [isOnline, socket, user?.driver?.id]);
 
   return (

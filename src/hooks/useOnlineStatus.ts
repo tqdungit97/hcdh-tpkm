@@ -10,7 +10,7 @@ export function useOnlineStatus() {
   const { user } = useProfile();
   const geoLocation = useGeolocation();
   const { isOpen, onOpen, onToggle } = useDisclosure({
-    defaultIsOpen: user?.driver?.driverLoginSession?.status === "ONLINE",
+    defaultIsOpen: user?.driver?.onlineSession?.onlineStatus === "ONLINE",
   });
   const { isLoading, mutate } = useMutation(toggleDriverOnlineStatus, {
     onSuccess: onToggle,
@@ -32,7 +32,7 @@ export function useOnlineStatus() {
   }, [isOpen, geoLocation, mutate]);
 
   useEffect(() => {
-    if (user?.driver?.driverLoginSession?.status === "ONLINE") {
+    if (user?.driver?.onlineSession?.onlineStatus === "ONLINE") {
       onOpen();
     }
   }, [user, onOpen]);

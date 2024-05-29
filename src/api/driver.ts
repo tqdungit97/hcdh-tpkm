@@ -8,4 +8,4 @@ export type PutToggleDriverOnlineStatusPayload = {
 
 export const toggleDriverOnlineStatus = (
   payload: PutToggleDriverOnlineStatusPayload
-) => AxiosInstance.put("api/users/online", payload);
+) => AxiosInstance.put("api/drivers/online", payload);

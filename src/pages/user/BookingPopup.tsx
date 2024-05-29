@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useBooking } from "../../hooks";
 import { useSocketIO } from "../../hooks/useSocketIO";
-import { BookingStatus } from "../../types/booking";
+import { Booking, BookingStatus } from "../../types/booking";
 
 type BookingStep = {
   index: number;
@@ -104,9 +104,9 @@ export function BookingPopup() {
   const hasBooking = !!bookingData;
   useEffect(() => {
     if (hasBooking) {
-      socket.open();
       socket.on(`${bookingData?.id}`, (event) => {
-        const data = JSON.parse(event) as { status: BookingStatus };
+        const data = JSON.parse(event) as Booking;
+        console.log(data);
         if (data.status === BookingStatus.PAID) {
           toast({
             isClosable: true,
@@ -129,18 +129,13 @@ export function BookingPopup() {
           });
         }
       });
-    } else {
-      socket.disconnect();
     }
-    return () => {
-      socket.disconnect();
-      socket.close();
-    };
   }, [socket, hasBooking, bookingData?.id, toast, setBooking, updateBooking]);
 
   const currentBookingStep =
     BOOKING_STEPS.get(bookingData?.status as BookingStatus)?.index ?? -1;
 
+  const driverNotFound = bookingData?.status === BookingStatus.DRIVER_NOT_FOUND;
   return (
     <Modal
       isCentered
@@ -150,48 +145,59 @@ export function BookingPopup() {
     >
       <ModalOverlay />
       <ModalContent mb="0">
-        <ModalHeader>Đang đặt xe</ModalHeader>
-        <ModalBody>
-          <Stepper
-            colorScheme="whatsapp"
-            index={currentBookingStep}
-            orientation="vertical"
-            height="450px"
-            gap={0}
-          >
-            {[...BOOKING_STEPS.entries()].map(([key, step]) => (
-              <Step key={key}>
-                <StepIndicator>
-                  <StepStatus
-                    complete={<StepIcon />}
-                    incomplete={<StepNumber />}
-                    active={<StepNumber />}
-                  />
-                </StepIndicator>
+        <ModalHeader>
+          {driverNotFound ? "Không tìm thấy tài xế" : "Đang đặt xe"}
+        </ModalHeader>
+        {!driverNotFound && (
+          <ModalBody>
+            <Stepper
+              colorScheme="whatsapp"
+              index={currentBookingStep}
+              orientation="vertical"
+              height="450px"
+              gap={0}
+            >
+              {[...BOOKING_STEPS.entries()].map(([key, step]) => (
+                <Step key={key}>
+                  <StepIndicator>
+                    <StepStatus
+                      complete={<StepIcon />}
+                      incomplete={<StepNumber />}
+                      active={<StepNumber />}
+                    />
+                  </StepIndicator>
 
-                <Box>
-                  <StepTitle>{step.title}</StepTitle>
-                  <StepDescription>{step.description}</StepDescription>
-                </Box>
-                <StepSeparator />
-              </Step>
-            ))}
-          </Stepper>
-        </ModalBody>
+                  <Box>
+                    <StepTitle>{step.title}</StepTitle>
+                    <StepDescription>{step.description}</StepDescription>
+                  </Box>
+                  <StepSeparator />
+                </Step>
+              ))}
+            </Stepper>
+          </ModalBody>
+        )}
         <ModalFooter>
-          <Button
-            width="full"
-            onClick={() => {
-              updateBookingStatus({
-                bookingId: bookingData?.id ?? -1,
-                actionType: BookingStatus.USER_CANCELLED,
-                assignedDriverId: bookingData?.driver?.id,
-              });
-            }}
-            disabled={currentBookingStep >= 2}
-          >
-            Hủy
-          </Button>
+          {!driverNotFound && (
+            <Button
+              width="full"
+              onClick={() => {
+                updateBookingStatus({
+                  orderId: bookingData?.id ?? -1,
+                  actionType: BookingStatus.USER_CANCELLED,
+                  assignedDriverId: bookingData?.driver?.id,
+                });
+              }}
+              disabled={currentBookingStep >= 2}
+            >
+              Hủy
+            </Button>
+          )}
+          {driverNotFound && (
+            <Button width="full" onClick={() => setBooking(undefined)}>
+              Chấp nhận
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

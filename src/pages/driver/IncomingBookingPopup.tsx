@@ -66,13 +66,13 @@ export function IncomingBookingPopup({
               <Text color="gray" fontSize="smaller" fontWeight="bold">
                 ĐIỂM ĐÓN
               </Text>
-              <Text>{bookingData?.booking?.bookingDetail?.pickUpPoint}</Text>
+              <Text>{bookingData?.booking?.orderDetail?.pickupLocation}</Text>
             </Box>
             <Box w="full" px="8px">
               <Text color="gray" fontSize="smaller" fontWeight="bold">
                 ĐIỂM ĐẾN
               </Text>
-              <Text>{bookingData?.booking?.bookingDetail?.dropOffPoint}</Text>
+              <Text>{bookingData?.booking?.orderDetail?.returnLocation}</Text>
             </Box>
           </VStack>
           <Divider />

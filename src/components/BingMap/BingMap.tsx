@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import { useScript } from "usehooks-ts";
 import { environment } from "../../environment";
 import { useContext, useEffect, useRef } from "react";
@@ -22,9 +22,9 @@ export function BingMap() {
     if (status === "ready" && geoLocation?.coords && mapRef.current) {
       setTimeout(() => {
         const center = new Microsoft.Maps.Location(
-            geoLocation?.coords.latitude,
-            geoLocation?.coords.longitude
-          );
+          geoLocation?.coords.latitude,
+          geoLocation?.coords.longitude
+        );
         const map = new Microsoft.Maps.Map(mapRef.current, {
           credentials: environment.bingMapApiKey,
           zoom: 15,
@@ -44,5 +44,14 @@ export function BingMap() {
     }
   }, [status, geoLocation, setMap]);
 
-  return <Box ref={mapRef} w="full" h="full" sx={{ '.CopyrightControl': { display: 'none' } }}/>;
+  return (
+    <Box
+      ref={mapRef}
+      w="full"
+      h="full"
+      sx={{ ".CopyrightControl": { display: "none" } }}
+    >
+      <Skeleton w="full" h="full" />
+    </Box>
+  );
 }
