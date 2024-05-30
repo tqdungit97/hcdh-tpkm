@@ -9,13 +9,13 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: "http://localhost:9999/api",
+        target: "http://144.217.12.64:9999/api",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/booking-event": {
-        target: "http://172.16.32.30:4006/booking-event",
+        target: "http://144.217.12.64:4006/booking-event",
         changeOrigin: true,
         headers: {
           "ngrok-skip-browser-warning": "69420",
