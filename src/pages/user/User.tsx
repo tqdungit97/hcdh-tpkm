@@ -4,7 +4,6 @@ import { AppHeader } from "../../components";
 import {
   BingMap,
   AutoCompleteAddress,
-  BingMapProvider,
   Directions,
   BingMapDirections,
 } from "../../components/BingMap";
@@ -14,7 +13,7 @@ import { useAuthenticated, useBooking } from "../../hooks";
 import { getUserBookings } from "../../api/booking";
 import { isInCompletedBooking } from "../../helpers/booking";
 import { VehicleType } from "../../types/booking";
-import { SocketIOManager } from "../../SocketIOManager"
+import { SocketIOManager } from "../../SocketIOManager";
 import { SelectCarType } from "./SelectCarType";
 
 export function User() {
@@ -48,36 +47,39 @@ export function User() {
     return () => {
       socket.disconnect();
       socket.close();
-    }
+    };
   }, [socket]);
 
   return (
-    <BingMapProvider>
-      <VStack spacing="0">
-        <AppHeader />
-        <Box w="full" h="calc(60vh - 40px)">
-          <BingMap />
-          {directions && <BingMapDirections directions={directions} />}
-        </Box>
-        <Box w="full" h="40%" p="16px">
-          <AutoCompleteAddress
-            disabled={!!bookingData}
-            id="autoSuggestFrom"
-            mb="8px"
-            onChange={(from) => setDirections((prev) => ({ ...prev, from }))}
-          />
-          <AutoCompleteAddress
-            disabled={!!bookingData}
-            id="autoSuggestTo"
-            mb="8px"
-            onChange={(to) => setDirections((prev) => ({ ...prev, to }))}
-          />
-          <SelectCarType vehicleType={vehicleType} setVehicleType={setVehicleType} />
-          <BookingButton vehicleType={vehicleType} directions={directions} />
-        </Box>
-      </VStack>
+    // <BingMapProvider>
+    <VStack spacing="0">
+      <AppHeader />
+      <Box w="full" h="calc(60vh - 40px)">
+        <BingMap />
+        {directions && <BingMapDirections directions={directions} />}
+      </Box>
+      <Box w="full" h="40%" p="16px">
+        <AutoCompleteAddress
+          disabled={!!bookingData}
+          id="autoSuggestFrom"
+          mb="8px"
+          onChange={(from) => setDirections((prev) => ({ ...prev, from }))}
+        />
+        <AutoCompleteAddress
+          disabled={!!bookingData}
+          id="autoSuggestTo"
+          mb="8px"
+          onChange={(to) => setDirections((prev) => ({ ...prev, to }))}
+        />
+        <SelectCarType
+          vehicleType={vehicleType}
+          setVehicleType={setVehicleType}
+        />
+        <BookingButton vehicleType={vehicleType} directions={directions} />
+      </Box>
       <BookingPopup />
-    </BingMapProvider>
+    </VStack>
+    // </BingMapProvider>
   );
 }
 

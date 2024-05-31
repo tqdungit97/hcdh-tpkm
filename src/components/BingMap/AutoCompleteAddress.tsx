@@ -1,7 +1,19 @@
-import { ComponentProps, useContext, useEffect, useMemo, useRef } from "react";
-import { InputGroup, InputLeftElement, Input, Icon, InputRightElement } from "@chakra-ui/react";
+import {
+  ComponentProps,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Icon,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { MdClose, MdLocationPin } from "react-icons/md";
-import { BingMapContext } from ".";
+import { store } from "./store";
 
 type AutoCompleteAddressProps = {
   id: string;
@@ -17,7 +29,7 @@ export function AutoCompleteAddress({
 }: AutoCompleteAddressProps) {
   const inputRef = useRef<HTMLInputElement>({} as HTMLInputElement);
   const containerRef = useRef<HTMLDivElement>({} as HTMLDivElement);
-  const { map } = useContext(BingMapContext);
+  const [map, setMap] = useState<Microsoft.Maps.Map>();
 
   const IDS = useMemo(
     () => ({
@@ -28,9 +40,13 @@ export function AutoCompleteAddress({
   );
 
   const clear = () => {
-    inputRef.current!.value = '';
+    inputRef.current!.value = "";
     onChange(undefined);
-  }
+  };
+
+  useEffect(() => {
+    store.subscribe(setMap);
+  }, []);
 
   useEffect(() => {
     if (map) {
@@ -43,9 +59,9 @@ export function AutoCompleteAddress({
           manager.attachAutosuggest(
             `#${IDS.input}`,
             `#${IDS.container}`,
-            onChange,
+            onChange
           );
-        }, 400);
+        }, 1000);
       });
     }
   }, [map, IDS, onChange]);
@@ -65,16 +81,21 @@ export function AutoCompleteAddress({
           [`#as_containerSearch_${IDS.input}`]: {
             width: "full",
           },
-          '.clear': {
-            display: 'none',
-          }
+          ".clear": {
+            display: "none",
+          },
         },
       }}
     >
       <InputLeftElement>
         <Icon as={MdLocationPin} />
       </InputLeftElement>
-      <Input disabled={disabled} id={IDS.input} bg="white" placeholder="Bạn muốn đi đâu ?" />
+      <Input
+        disabled={disabled}
+        id={IDS.input}
+        bg="white"
+        placeholder="Bạn muốn đi đâu ?"
+      />
       <InputRightElement onClick={clear}>
         <Icon as={MdClose} />
       </InputRightElement>

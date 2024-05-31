@@ -1,9 +1,9 @@
 import { Box, Skeleton } from "@chakra-ui/react";
 import { useScript } from "usehooks-ts";
 import { environment } from "../../environment";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGeolocation } from "../../hooks";
-import { BingMapContext } from "./BingMapContext";
+import { store } from "./store";
 
 export type Directions = {
   from?: Microsoft.Maps.ISuggestionResult;
@@ -11,15 +11,14 @@ export type Directions = {
 };
 
 export function BingMap() {
-  const { setMap } = useContext(BingMapContext);
   const geoLocation = useGeolocation();
   const mapRef = useRef<HTMLDivElement>({} as HTMLDivElement);
-  const status = useScript(
+  const scriptLoaded = useScript(
     `http://www.bing.com/api/maps/mapcontrol?key=${environment.bingMapApiKey}`
-  );
+  ) === 'ready';
 
   useEffect(() => {
-    if (status === "ready" && geoLocation?.coords && mapRef.current) {
+    if (scriptLoaded && geoLocation?.coords && mapRef.current) {
       setTimeout(() => {
         const center = new Microsoft.Maps.Location(
           geoLocation?.coords.latitude,
@@ -39,10 +38,10 @@ export function BingMap() {
         });
         const pin = new Microsoft.Maps.Pushpin(center);
         map.entities.push(pin);
-        setMap(map);
-      }, 100);
+        store.dispatch(map)
+      }, 2000);
     }
-  }, [status, geoLocation, setMap]);
+  }, [scriptLoaded, geoLocation]);
 
   return (
     <Box
