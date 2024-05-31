@@ -13,7 +13,7 @@ import { Header } from "./Header";
 import { IncomingBookingPopup } from "./IncomingBookingPopup";
 import { BingMap } from "../../components/BingMap";
 import { useEffect, useState } from "react";
-import { useSocketIO } from "../../hooks/useSocketIO";
+import SocketIOManager from "../../SocketIOManager";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { Booking, BookingStatus } from "../../types/booking";
 import { Customer } from "../../types/user";
@@ -21,12 +21,13 @@ import { useBooking } from "../../hooks";
 import { BookingStatusPoppup } from "./BookingStatusPoppup";
 
 export function Driver() {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const socket = new SocketIOManager();
   const [bookingData, setBookingData] = useState<{
     booking: Booking;
     customer: Customer;
   }>();
   const toast = useToast();
-  const socket = useSocketIO();
   const { user } = useProfile();
   const { isOnline } = useOnlineStatus();
   const { updateBookingStatus } = useBooking();

@@ -14,11 +14,12 @@ import { useAuthenticated, useBooking } from "../../hooks";
 import { getUserBookings } from "../../api/booking";
 import { isInCompletedBooking } from "../../helpers/booking";
 import { VehicleType } from "../../types/booking";
-import { useSocketIO } from "../../hooks/useSocketIO";
+import { SocketIOManager } from "../../SocketIOManager"
 import { SelectCarType } from "./SelectCarType";
 
 export function User() {
-  const socket = useSocketIO();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const socket = new SocketIOManager();
   const auth = useAuthenticated();
   const { bookingData, setBooking } = useBooking();
   const [directions, setDirections] = useState<Directions>();

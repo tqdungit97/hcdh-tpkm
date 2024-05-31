@@ -20,7 +20,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useBooking } from "../../hooks";
-import { useSocketIO } from "../../hooks/useSocketIO";
+import SocketIOManager from "../../SocketIOManager";
 import { Booking, BookingStatus } from "../../types/booking";
 
 type BookingStep = {
@@ -98,8 +98,9 @@ const BOOKING_STEPS = new Map<BookingStatus, BookingStep>([
 export function BookingPopup() {
   const { bookingData, setBooking, updateBooking, updateBookingStatus } =
     useBooking();
-  const socket = useSocketIO();
   const toast = useToast();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const socket = new SocketIOManager();
 
   const hasBooking = !!bookingData;
   useEffect(() => {
