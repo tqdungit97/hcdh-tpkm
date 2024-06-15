@@ -11,18 +11,23 @@ import { MdAccessTime, MdReceipt, MdSpeed } from "react-icons/md";
 import { useProfile } from "../../hooks/useProfile";
 import { Header } from "./Header";
 import { IncomingBookingPopup } from "./IncomingBookingPopup";
-import { BingMap } from "../../components/BingMap";
-import { useEffect, useState } from "react";
+import {
+  BingMap,
+  BingMapDirections,
+  Directions,
+} from "../../components/BingMap";
+import { useEffect, useMemo, useState } from "react";
 import SocketIOManager from "../../SocketIOManager";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { Booking, BookingStatus } from "../../types/booking";
 import { Customer } from "../../types/user";
-import { useBooking } from "../../hooks";
+import { useBooking, useGeolocation } from "../../hooks";
 import { BookingStatusPoppup } from "./BookingStatusPoppup";
 
 export function Driver() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const socket = new SocketIOManager();
+  const geoLocation = useGeolocation();
   const [bookingData, setBookingData] = useState<{
     booking: Booking;
     customer: Customer;
@@ -102,6 +107,71 @@ export function Driver() {
     }
   }, [isOnline, socket, user?.driver?.id]);
 
+  const directions = useMemo((): Directions | undefined => {
+    if (
+      !bookingData?.booking ||
+      !bookingData.booking.orderDetail ||
+      bookingData?.booking.status === BookingStatus.DRIVER_FOUND
+    )
+      return undefined;
+    const {
+      pickupLocation,
+      pickupLatitude,
+      pickupLongitude,
+      returnLocation,
+      returnLatitude,
+      returnLongitude,
+    } = bookingData.booking.orderDetail;
+
+    const from = {
+      title: pickupLocation,
+      location: new Microsoft.Maps.Location(pickupLatitude, pickupLongitude),
+    } as Microsoft.Maps.ISuggestionResult;
+    const to = {
+      title: returnLocation,
+      location: new Microsoft.Maps.Location(returnLatitude, returnLongitude),
+    } as Microsoft.Maps.ISuggestionResult;
+
+    if (bookingData?.booking.status === BookingStatus.CONFIRMED) {
+      from.title = "Vị trí hiện tại";
+      from.location = new Microsoft.Maps.Location(
+        geoLocation?.coords.latitude,
+        geoLocation?.coords.longitude
+      );
+      to.title = pickupLocation;
+      to.location = new Microsoft.Maps.Location(
+        pickupLatitude,
+        pickupLongitude
+      );
+    }
+
+    if (bookingData?.booking.status === BookingStatus.CONFIRMED) {
+      from.title = "Vị trí hiện tại";
+      from.location = new Microsoft.Maps.Location(
+        geoLocation?.coords.latitude,
+        geoLocation?.coords.longitude
+      );
+      to.title = pickupLocation;
+      to.location = new Microsoft.Maps.Location(
+        pickupLatitude,
+        pickupLongitude
+      );
+    }
+    if (
+      [BookingStatus.ARRIVED, BookingStatus.PAID].includes(
+        bookingData.booking.status
+      )
+    ) {
+      from.title = to.title;
+      from.location = to.location;
+    }
+
+    return {
+      from,
+      to,
+    };
+  }, [bookingData, geoLocation]);
+
   return (
     <VStack spacing="0">
       {bookingData &&
@@ -121,6 +191,7 @@ export function Driver() {
       <Header />
       <Box w="full" h="calc(100vh - 40px)">
         <BingMap />
+        <BingMapDirections directions={directions} />
       </Box>
       <Box
         position="absolute"

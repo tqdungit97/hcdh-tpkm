@@ -17,29 +17,31 @@ export function BingMapDirections({ directions }: DirectionsProps) {
   }, []);
 
   useEffect(() => {
-    if (map && directions?.from && directions?.to) {
+    if (map) {
       map.entities.clear();
       Microsoft.Maps.loadModule("Microsoft.Maps.Directions", function () {
-        if (!directionsManager.current) {
-          directionsManager.current =
-            //Create an instance of the directions manager.
-            new Microsoft.Maps.Directions.DirectionsManager(map);
-        }
-        directionsManager.current.clearAll();
-        //Create waypoints to route between.
-        const seattleWaypoint = new Microsoft.Maps.Directions.Waypoint({
-          address: directions.from?.title,
-          location: directions.from?.location,
-        });
-        directionsManager.current.addWaypoint(seattleWaypoint);
+        if (directions?.from && directions?.to) {
+          if (!directionsManager.current) {
+            directionsManager.current =
+              //Create an instance of the directions manager.
+              new Microsoft.Maps.Directions.DirectionsManager(map);
+          }
+          directionsManager.current.clearAll();
+          //Create waypoints to route between.
+          const seattleWaypoint = new Microsoft.Maps.Directions.Waypoint({
+            address: directions.from?.title,
+            location: directions.from?.location,
+          });
+          directionsManager.current.addWaypoint(seattleWaypoint);
 
-        const workWaypoint = new Microsoft.Maps.Directions.Waypoint({
-          address: directions.to?.title,
-          location: directions.to?.location,
-        });
-        directionsManager.current.addWaypoint(workWaypoint);
-        //Calculate directions.
-        directionsManager.current.calculateDirections();
+          const workWaypoint = new Microsoft.Maps.Directions.Waypoint({
+            address: directions.to?.title,
+            location: directions.to?.location,
+          });
+          directionsManager.current.addWaypoint(workWaypoint);
+          //Calculate directions.
+          directionsManager.current.calculateDirections();
+        }
       });
     }
   }, [map, directions]);
