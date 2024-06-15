@@ -4,7 +4,7 @@ import { Directions } from ".";
 import store from "./store";
 
 type DirectionsProps = {
-  directions: Directions;
+  directions?: Directions;
 };
 export function BingMapDirections({ directions }: DirectionsProps) {
   const [map, setMap] = useState<Microsoft.Maps.Map>();
@@ -17,7 +17,7 @@ export function BingMapDirections({ directions }: DirectionsProps) {
   }, []);
 
   useEffect(() => {
-    if (map && directions.from && directions.to) {
+    if (map && directions?.from && directions?.to) {
       map.entities.clear();
       Microsoft.Maps.loadModule("Microsoft.Maps.Directions", function () {
         if (!directionsManager.current) {

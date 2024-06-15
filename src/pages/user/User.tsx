@@ -56,7 +56,7 @@ export function User() {
       <AppHeader />
       <Box w="full" h="calc(60vh - 40px)">
         <BingMap />
-        {directions && <BingMapDirections directions={directions} />}
+        {<BingMapDirections directions={directions} />}
       </Box>
       <Box w="full" h="40%" p="16px">
         <AutoCompleteAddress
